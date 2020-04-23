@@ -4,7 +4,6 @@ import URI from "urijs";
 // /records endpoint
 window.path = "http://localhost:3000/records";
 
-// Your retrieve function plus any additional functions go here ...
 function retrieve(options = {}) {
 	// set option defaults
 	if (!options.page) options.page = 1;
@@ -23,9 +22,7 @@ function retrieve(options = {}) {
 	});
 	
 	// fetch data from API
-	return fetch(url).then(response => {
-		return response.json();
-	}).then(data => {
+	return fetch(url).then(response => response.json()).then(data => {
 		
 		// Determine whether there's another page of results
 		const nextPage = data.splice(10);
