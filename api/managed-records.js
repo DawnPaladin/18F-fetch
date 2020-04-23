@@ -32,13 +32,29 @@ function retrieve(options = {}) {
 			const nextPage = data.splice(10);
 			const nextPageNum = nextPage.length > 0 ? pageNum + 1 : null;
 			
-			resolve({
+			// Initialize output
+			const output = {
 				ids: [],
 				open: [],
 				closedPrimaryCount: 0,
 				previousPage: pageNum === 1 ? null : pageNum - 1,
 				nextPage: nextPageNum,
-			});
+			};
+			
+			// Process records
+			const primaryColors = ["red", "blue", "yellow"];
+			data.forEach(row => {
+				output.ids.push(row.id);
+				row.isPrimary = primaryColors.includes(row.color);
+				if (row.disposition === "open") {
+					output.open.push(row);
+				}
+				if (row.disposition === "closed" && row.isPrimary) {
+					output.closedPrimaryCount += 1;
+				}
+			})
+			
+			resolve(output);
 		}).catch(error => {
 			console.log("Network error:", error);
 		});
@@ -46,8 +62,5 @@ function retrieve(options = {}) {
 	
 	return promise;
 }
-retrieve({page: 10, colors: ["red"]}).then(data => console.log(10, data))
-retrieve({page: 11, colors: ["red"]}).then(data => console.log(11, data))
-retrieve({page: 12, colors: ["red"]}).then(data => console.log(12, data))
 
 export default retrieve;
