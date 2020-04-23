@@ -25,6 +25,8 @@ function retrieve(options = {}) {
 		return response.json();
 	}).then(data => {
 		console.log(data);
+	}).catch(error => {
+		console.log("Network error:", error);
 	})
 	const promise = new Promise((resolve, reject) => {
 		resolve()
