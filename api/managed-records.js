@@ -22,35 +22,32 @@ function retrieve(options = {}) {
 		url = URI(url).addSearch("color[]", color)
 	});
 	
-	// fetch data from API
-	fetch(url).then(response => {
-		return response.json();
-	}).then(data => {
-		
-		// Determine whether there's another page of results
-		const nextPage = data.splice(10);
-		const nextPageNum = nextPage.length > 0 ? pageNum + 1 : null;
-		
-		console.log(pageNum, data, nextPageNum);
-		
-		const output = {
-			ids: [],
-			open: [],
-			closedPrimaryCount: 0,
-			previousPage: pageNum === 1 ? null : pageNum - 1,
-			nextPage: nextPageNum,
-		}
-	}).catch(error => {
-		console.log("Network error:", error);
-	})
-	
 	const promise = new Promise((resolve, reject) => {
-		resolve()
-	})
+		// fetch data from API
+		fetch(url).then(response => {
+			return response.json();
+		}).then(data => {
+			
+			// Determine whether there's another page of results
+			const nextPage = data.splice(10);
+			const nextPageNum = nextPage.length > 0 ? pageNum + 1 : null;
+			
+			resolve({
+				ids: [],
+				open: [],
+				closedPrimaryCount: 0,
+				previousPage: pageNum === 1 ? null : pageNum - 1,
+				nextPage: nextPageNum,
+			});
+		}).catch(error => {
+			console.log("Network error:", error);
+		});
+	});
+	
 	return promise;
 }
-retrieve({page: 10, colors: ["red"]});
-retrieve({page: 11, colors: ["red"]});
-retrieve({page: 12, colors: ["red"]});
+retrieve({page: 10, colors: ["red"]}).then(data => console.log(10, data))
+retrieve({page: 11, colors: ["red"]}).then(data => console.log(11, data))
+retrieve({page: 12, colors: ["red"]}).then(data => console.log(12, data))
 
 export default retrieve;
