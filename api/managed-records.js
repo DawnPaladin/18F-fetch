@@ -4,6 +4,24 @@ import URI from "urijs";
 // /records endpoint
 window.path = "http://localhost:3000/records";
 
+/**
+ * Provide information about a page of 10 color records. 
+ * Specify the colors you're interested in. The server will
+ * provide a paginated list, which you can fetch a page at a time.
+ * 
+ * Example usage:
+ * retrieve({ colors: ["red", "yellow"], page: 1 }).then(colorPageSummary => console.log(colorPageSummary))
+ * 
+ * @param {Object} [options] - Options object (optional)
+ * @param {Array.string} [options.colors] - Colors you wish to retrieve
+ * @param {number} [options.page] - Page number
+ * @returns {Promise<Object>} a promise to return an object with these properties:
+ * ids: An array of the IDs of all the color records on this page.
+ * open: An array of all the color records on this page that were open.
+ * closedPrimaryCount: The number of closed color records that were primary (red, blue, or yellow).
+ * previousPage: Page number of the previous page (or null if this is the first page).
+ * nextPage: Page number of the next page (or null if this is the last page).
+ */
 function retrieve(options = {}) {
 	// set option defaults
 	if (!options.page) options.page = 1;
@@ -55,5 +73,8 @@ function retrieve(options = {}) {
 		console.log("Network error:", error);
 	});
 }
+
+// Sample usage:
+// retrieve({ page: 5, colors: ["brown"]}).then(colorPageSummary => console.log(colorPageSummary))
 
 export default retrieve;
